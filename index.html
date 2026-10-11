@@ -21,23 +21,26 @@
         </h1>
       </div>
       <nav class="flex space-x-4 md:space-x-6 text-sm font-medium">
-        <button onclick="switchTab('dashboard')" class="hover:text-blue-400 transition">Dashboard</button>
-        <button onclick="switchTab('modules')" class="hover:text-blue-400 transition">Modules</button>
-        <button onclick="switchTab('calculators')" class="hover:text-blue-400 transition">Calculators</button>
-        <button onclick="switchTab('simulators')" class="hover:text-blue-400 transition">Simulators</button>
-        <button onclick="switchTab('exam')" class="hover:text-blue-400 transition">Mock Exam</button>
+        <button onclick="switchTab('dashboard')" class="hover:text-blue-400 transition cursor-pointer">Dashboard</button>
+        <button onclick="switchTab('modules')" class="hover:text-blue-400 transition cursor-pointer">Modules</button>
+        <button onclick="switchTab('calculators')" class="hover:text-blue-400 transition cursor-pointer">Calculators</button>
+        <button onclick="switchTab('simulators')" class="hover:text-blue-400 transition cursor-pointer">Simulators</button>
+        <button onclick="switchTab('exam')" class="hover:text-blue-400 transition cursor-pointer">Mock Exam</button>
       </nav>
     </div>
   </header>
 
   <!-- Main View Container -->
   <main id="app-container" class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6">
-    <!-- Dynamic Content Injected Here -->
+    <!-- Fallback Content in case JS is delayed -->
+    <div class="space-y-6">
+      <h2 class="text-2xl font-bold text-slate-100">Loading Study Dashboard...</h2>
+    </div>
   </main>
 
   <!-- Footer -->
   <footer class="bg-slate-800 border-t border-slate-700 p-4 text-center text-xs text-slate-400">
-    <p>NetSwitch Academy — Independent Cybersecurity & Networking Study Tool. Official unit outlines remain primary assessment sources.</p>
+    <p>NetSwitch Academy — Independent Cybersecurity & Networking Study Tool.</p>
   </footer>
 
   <!-- Application Logic -->
@@ -71,12 +74,9 @@
       }
     };
 
-    document.addEventListener("DOMContentLoaded", () => {
-      switchTab("dashboard");
-    });
-
     function switchTab(tab) {
       const container = document.getElementById("app-container");
+      if (!container) return;
       
       if (tab === "dashboard") {
         container.innerHTML = `
@@ -105,7 +105,7 @@
             <div class="card-slate mt-6">
               <h3 class="text-lg font-semibold text-slate-200 mb-2">🚀 Recommended Next Step</h3>
               <p class="text-slate-300 text-sm mb-4">Practice subnetting calculations to prepare for Module 3 assessment questions.</p>
-              <button onclick="switchTab('calculators')" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded text-sm font-semibold transition">Open Subnet Calculator</button>
+              <button onclick="switchTab('calculators')" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded text-sm font-semibold transition cursor-pointer">Open Subnet Calculator</button>
             </div>
           </div>
         `;
@@ -114,10 +114,10 @@
           <div class="space-y-6">
             <h2 class="text-2xl font-bold text-slate-100">Course Modules (Revision List)</h2>
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-              <div class="card-slate"><span class="text-xs bg-blue-900 text-blue-300 px-2 py-1 rounded">7-9 Marks</span><h3 class="text-lg font-bold mt-2 text-slate-100">Module 1: Data Link Layer</h3><p class="text-sm text-slate-400 mt-1">Ethernet frames, MAC addresses, switch learning, and frame forwarding.</p></div>
-              <div class="card-slate"><span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-1 rounded">10-12 Marks</span><h3 class="text-lg font-bold mt-2 text-slate-100">Module 2: Network Layer</h3><p class="text-sm text-slate-400 mt-1">IPv4/IPv6 addressing, subnet masks, fragmentation, and MTU limits.</p></div>
-              <div class="card-slate"><span class="text-xs bg-emerald-900 text-emerald-300 px-2 py-1 rounded">15-17 Marks</span><h3 class="text-lg font-bold mt-2 text-slate-100">Module 3: IPv4 Subnetting & VLSM</h3><p class="text-sm text-slate-400 mt-1">CIDR notation, usable host ranges, and non-overlapping variable subnet allocations.</p></div>
-              <div class="card-slate"><span class="text-xs bg-purple-900 text-purple-300 px-2 py-1 rounded">9-11 Marks</span><h3 class="text-lg font-bold mt-2 text-slate-100">Module 4: Transport Layer</h3><p class="text-sm text-slate-400 mt-1">TCP vs UDP, 3-way handshakes, sequence numbers, and congestion control windows.</p></div>
+              <div class="card-slate"><span class="text-xs bg-blue-950 text-blue-300 px-2 py-1 rounded">7-9 Marks</span><h3 class="text-lg font-bold mt-2 text-slate-100">Module 1: Data Link Layer</h3><p class="text-sm text-slate-400 mt-1">Ethernet frames, MAC addresses, switch learning, and frame forwarding.</p></div>
+              <div class="card-slate"><span class="text-xs bg-indigo-950 text-indigo-300 px-2 py-1 rounded">10-12 Marks</span><h3 class="text-lg font-bold mt-2 text-slate-100">Module 2: Network Layer</h3><p class="text-sm text-slate-400 mt-1">IPv4/IPv6 addressing, subnet masks, fragmentation, and MTU limits.</p></div>
+              <div class="card-slate"><span class="text-xs bg-emerald-950 text-emerald-300 px-2 py-1 rounded">15-17 Marks</span><h3 class="text-lg font-bold mt-2 text-slate-100">Module 3: IPv4 Subnetting & VLSM</h3><p class="text-sm text-slate-400 mt-1">CIDR notation, usable host ranges, and non-overlapping variable subnet allocations.</p></div>
+              <div class="card-slate"><span class="text-xs bg-purple-950 text-purple-300 px-2 py-1 rounded">9-11 Marks</span><h3 class="text-lg font-bold mt-2 text-slate-100">Module 4: Transport Layer</h3><p class="text-sm text-slate-400 mt-1">TCP vs UDP, 3-way handshakes, sequence numbers, and congestion control windows.</p></div>
             </div>
           </div>
         `;
@@ -139,7 +139,7 @@
                   <input id="calc-cidr" type="number" value="24" class="p-2 rounded bg-slate-900 border border-slate-700 w-full text-sm text-slate-100">
                 </div>
                 <div class="flex items-end">
-                  <button onclick="runSubnetCalc()" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded text-sm font-semibold w-full transition">Calculate</button>
+                  <button onclick="runSubnetCalc()" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded text-sm font-semibold w-full transition cursor-pointer">Calculate</button>
                 </div>
               </div>
               <div id="calc-results" class="space-y-3 mt-4 border-t border-slate-700 pt-4"></div>
@@ -155,12 +155,12 @@
               <div class="card-slate">
                 <h3 class="text-lg font-bold text-slate-100">STP Root Bridge Election</h3>
                 <p class="text-sm text-slate-400 mt-1 mb-4">Simulate Bridge IDs, priorities, and port states to prevent Layer 2 switching loops.</p>
-                <button onclick="alert('STP simulation running: Lowest Priority & MAC wins root bridge election.')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded text-sm font-semibold">Launch STP Simulator</button>
+                <button onclick="alert('STP simulation running: Lowest Priority & MAC wins root bridge election.')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded text-sm font-semibold cursor-pointer">Launch STP Simulator</button>
               </div>
               <div class="card-slate">
                 <h3 class="text-lg font-bold text-slate-100">TCP 3-Way Handshake Lab</h3>
                 <p class="text-sm text-slate-400 mt-1 mb-4">Trace SYN, SYN-ACK, and ACK packets between client and server.</p>
-                <button onclick="alert('TCP Handshake: SYN (Seq=1000) -> SYN-ACK (Seq=5000, Ack=1001) -> ACK (Seq=1001, Ack=5001).')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded text-sm font-semibold">Trace TCP Handshake</button>
+                <button onclick="alert('TCP Handshake: SYN (Seq=1000) -> SYN-ACK (Seq=5000, Ack=1001) -> ACK (Seq=1001, Ack=5001).')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded text-sm font-semibold cursor-pointer">Trace TCP Handshake</button>
               </div>
             </div>
           </div>
@@ -171,7 +171,7 @@
             <h2 class="text-2xl font-bold text-slate-100">Mock Exam Practice Mode</h2>
             <div class="card-slate space-y-4">
               <p class="text-sm text-slate-300">Undergraduate 90-Mark Mock Exam structured according to official unit weightings across all 9 modules.</p>
-              <button onclick="alert('Mock Exam Started! Timer ticking down from 90 minutes.')" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded text-sm font-semibold">Start Timed Mock Exam</button>
+              <button onclick="alert('Mock Exam Started! Timer ticking down from 90 minutes.')" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded text-sm font-semibold cursor-pointer">Start Timed Mock Exam</button>
             </div>
           </div>
         `;
@@ -200,6 +200,11 @@
         </div>
       `;
     }
+
+    // Run immediately on page load
+    window.onload = function() {
+      switchTab('dashboard');
+    };
   </script>
 </body>
 </html>

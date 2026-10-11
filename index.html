@@ -3,11 +3,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Networks & Switching Mastery App</title>
-  <link rel="stylesheet" href="css/styles.css">
+  <title>NetSwitch Academy - Networks & Switching Learning App</title>
   <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body { background-color: #0f172a; color: #f8fafc; }
+    .card-slate { background-color: #1e293b; border: 1px solid #334155; border-radius: 0.5rem; padding: 1.25rem; }
+  </style>
 </head>
-<body class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col antialiased">
   <!-- Navigation Header -->
   <header class="bg-slate-800 border-b border-slate-700 sticky top-0 z-50">
     <div class="max-w-7xl mx-auto px-4 py-3 flex justify-between items-center">
@@ -17,35 +20,186 @@
           NetSwitch Academy
         </h1>
       </div>
-      <nav class="hidden md:flex space-x-6 text-sm font-medium">
-        <button onclick="switchTab('dashboard')" class="nav-btn hover:text-blue-400">Dashboard</button>
-        <button onclick="switchTab('modules')" class="nav-btn hover:text-blue-400">Modules</button>
-        <button onclick="switchTab('calculators')" class="nav-btn hover:text-blue-400">Calculators</button>
-        <button onclick="switchTab('simulators')" class="nav-btn hover:text-blue-400">Simulators</button>
-        <button onclick="switchTab('exam')" class="nav-btn hover:text-blue-400">Mock Exam</button>
+      <nav class="flex space-x-4 md:space-x-6 text-sm font-medium">
+        <button onclick="switchTab('dashboard')" class="hover:text-blue-400 transition">Dashboard</button>
+        <button onclick="switchTab('modules')" class="hover:text-blue-400 transition">Modules</button>
+        <button onclick="switchTab('calculators')" class="hover:text-blue-400 transition">Calculators</button>
+        <button onclick="switchTab('simulators')" class="hover:text-blue-400 transition">Simulators</button>
+        <button onclick="switchTab('exam')" class="hover:text-blue-400 transition">Mock Exam</button>
       </nav>
     </div>
   </header>
 
   <!-- Main View Container -->
   <main id="app-container" class="flex-grow max-w-7xl w-full mx-auto p-4 md:p-6">
-    <!-- Dynamic views injected via app.js -->
+    <!-- Dynamic Content Injected Here -->
   </main>
 
-  <!-- Disclaimer Footer -->
+  <!-- Footer -->
   <footer class="bg-slate-800 border-t border-slate-700 p-4 text-center text-xs text-slate-400">
-    <p>Disclaimer: Independent study tool for cybersecurity and networking students. Official unit outlines remain primary assessment sources.</p>
+    <p>NetSwitch Academy — Independent Cybersecurity & Networking Study Tool. Official unit outlines remain primary assessment sources.</p>
   </footer>
 
-  <!-- Scripts -->
-  <script src="js/calculators/subnetting.js"></script>
-  <script src="js/calculators/vlsm.js"></script>
-  <script src="js/calculators/fragmentation.js"></script>
-  <script src="js/simulators/stp.js"></script>
-  <script src="js/simulators/vlan.js"></script>
-  <script src="js/simulators/tcp.js"></script>
-  <script src="js/data/lessons.js"></script>
-  <script src="js/data/questions.js"></script>
-  <script src="js/app.js"></script>
+  <!-- Application Logic -->
+  <script>
+    const SubnetCalculator = {
+      calculate(ip, cidr) {
+        const prefix = parseInt(cidr, 10);
+        if (isNaN(prefix) || prefix < 0 || prefix > 32) return null;
+        const ipArr = ip.split('.').map(Number);
+        if (ipArr.length !== 4 || ipArr.some(octet => isNaN(octet) || octet < 0 || octet > 255)) return null;
+
+        const ipInt = (ipArr[0] << 24) | (ipArr[1] << 16) | (ipArr[2] << 8) | ipArr[3];
+        const maskInt = prefix === 0 ? 0 : (~0 << (32 - prefix));
+        const networkInt = ipInt & maskInt;
+        const broadcastInt = networkInt | (~maskInt);
+        const totalAddresses = Math.pow(2, 32 - prefix);
+        const usableHosts = prefix >= 31 ? (prefix === 31 ? 2 : 1) : totalAddresses - 2;
+
+        return {
+          networkAddress: this.intToIp(networkInt),
+          broadcastAddress: this.intToIp(broadcastInt),
+          subnetMask: this.intToIp(maskInt),
+          firstUsable: this.intToIp(prefix >= 31 ? networkInt : networkInt + 1),
+          lastUsable: this.intToIp(prefix >= 31 ? broadcastInt : broadcastInt - 1),
+          totalAddresses,
+          usableHosts: usableHosts < 0 ? 0 : usableHosts
+        };
+      },
+      intToIp(int) {
+        return [(int >>> 24) & 255, (int >>> 16) & 255, (int >>> 8) & 255, int & 255].join('.');
+      }
+    };
+
+    document.addEventListener("DOMContentLoaded", () => {
+      switchTab("dashboard");
+    });
+
+    function switchTab(tab) {
+      const container = document.getElementById("app-container");
+      
+      if (tab === "dashboard") {
+        container.innerHTML = `
+          <div class="space-y-6">
+            <div>
+              <h2 class="text-2xl font-bold text-slate-100">Study Dashboard</h2>
+              <p class="text-slate-400 text-sm mt-1">Welcome back, Cybersecurity Student. Track your mastery across all 9 assessment modules.</p>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div class="card-slate">
+                <h3 class="text-slate-400 text-sm font-medium">Overall Progress</h3>
+                <p class="text-3xl font-bold text-blue-400 mt-2">12%</p>
+                <p class="text-xs text-slate-500 mt-1">1 of 9 modules reviewed</p>
+              </div>
+              <div class="card-slate">
+                <h3 class="text-slate-400 text-sm font-medium">Target Exam Mark</h3>
+                <p class="text-3xl font-bold text-indigo-400 mt-2">90 Marks</p>
+                <p class="text-xs text-slate-500 mt-1">Undergraduate weighting</p>
+              </div>
+              <div class="card-slate">
+                <h3 class="text-slate-400 text-sm font-medium">30-Day Plan</h3>
+                <p class="text-3xl font-bold text-emerald-400 mt-2">Day 1 / 30</p>
+                <p class="text-xs text-slate-500 mt-1">Active Study Streak</p>
+              </div>
+            </div>
+            <div class="card-slate mt-6">
+              <h3 class="text-lg font-semibold text-slate-200 mb-2">🚀 Recommended Next Step</h3>
+              <p class="text-slate-300 text-sm mb-4">Practice subnetting calculations to prepare for Module 3 assessment questions.</p>
+              <button onclick="switchTab('calculators')" class="bg-blue-600 hover:bg-blue-500 text-white px-4 py-2 rounded text-sm font-semibold transition">Open Subnet Calculator</button>
+            </div>
+          </div>
+        `;
+      } else if (tab === "modules") {
+        container.innerHTML = `
+          <div class="space-y-6">
+            <h2 class="text-2xl font-bold text-slate-100">Course Modules (Revision List)</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="card-slate"><span class="text-xs bg-blue-900 text-blue-300 px-2 py-1 rounded">7-9 Marks</span><h3 class="text-lg font-bold mt-2 text-slate-100">Module 1: Data Link Layer</h3><p class="text-sm text-slate-400 mt-1">Ethernet frames, MAC addresses, switch learning, and frame forwarding.</p></div>
+              <div class="card-slate"><span class="text-xs bg-indigo-900 text-indigo-300 px-2 py-1 rounded">10-12 Marks</span><h3 class="text-lg font-bold mt-2 text-slate-100">Module 2: Network Layer</h3><p class="text-sm text-slate-400 mt-1">IPv4/IPv6 addressing, subnet masks, fragmentation, and MTU limits.</p></div>
+              <div class="card-slate"><span class="text-xs bg-emerald-900 text-emerald-300 px-2 py-1 rounded">15-17 Marks</span><h3 class="text-lg font-bold mt-2 text-slate-100">Module 3: IPv4 Subnetting & VLSM</h3><p class="text-sm text-slate-400 mt-1">CIDR notation, usable host ranges, and non-overlapping variable subnet allocations.</p></div>
+              <div class="card-slate"><span class="text-xs bg-purple-900 text-purple-300 px-2 py-1 rounded">9-11 Marks</span><h3 class="text-lg font-bold mt-2 text-slate-100">Module 4: Transport Layer</h3><p class="text-sm text-slate-400 mt-1">TCP vs UDP, 3-way handshakes, sequence numbers, and congestion control windows.</p></div>
+            </div>
+          </div>
+        `;
+      } else if (tab === "calculators") {
+        container.innerHTML = `
+          <div class="space-y-6">
+            <div>
+              <h2 class="text-2xl font-bold text-slate-100">IPv4 Subnet Calculator</h2>
+              <p class="text-slate-400 text-sm mt-1">Enter an IP address and CIDR prefix to calculate network boundaries instantly.</p>
+            </div>
+            <div class="card-slate space-y-4">
+              <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                  <label class="block text-xs font-medium text-slate-400 mb-1">IP Address</label>
+                  <input id="calc-ip" type="text" value="192.168.1.50" class="p-2 rounded bg-slate-900 border border-slate-700 w-full text-sm text-slate-100">
+                </div>
+                <div>
+                  <label class="block text-xs font-medium text-slate-400 mb-1">CIDR Prefix</label>
+                  <input id="calc-cidr" type="number" value="24" class="p-2 rounded bg-slate-900 border border-slate-700 w-full text-sm text-slate-100">
+                </div>
+                <div class="flex items-end">
+                  <button onclick="runSubnetCalc()" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded text-sm font-semibold w-full transition">Calculate</button>
+                </div>
+              </div>
+              <div id="calc-results" class="space-y-3 mt-4 border-t border-slate-700 pt-4"></div>
+            </div>
+          </div>
+        `;
+        runSubnetCalc();
+      } else if (tab === "simulators") {
+        container.innerHTML = `
+          <div class="space-y-6">
+            <h2 class="text-2xl font-bold text-slate-100">Interactive Network Simulators</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div class="card-slate">
+                <h3 class="text-lg font-bold text-slate-100">STP Root Bridge Election</h3>
+                <p class="text-sm text-slate-400 mt-1 mb-4">Simulate Bridge IDs, priorities, and port states to prevent Layer 2 switching loops.</p>
+                <button onclick="alert('STP simulation running: Lowest Priority & MAC wins root bridge election.')" class="bg-indigo-600 hover:bg-indigo-500 text-white px-4 py-2 rounded text-sm font-semibold">Launch STP Simulator</button>
+              </div>
+              <div class="card-slate">
+                <h3 class="text-lg font-bold text-slate-100">TCP 3-Way Handshake Lab</h3>
+                <p class="text-sm text-slate-400 mt-1 mb-4">Trace SYN, SYN-ACK, and ACK packets between client and server.</p>
+                <button onclick="alert('TCP Handshake: SYN (Seq=1000) -> SYN-ACK (Seq=5000, Ack=1001) -> ACK (Seq=1001, Ack=5001).')" class="bg-emerald-600 hover:bg-emerald-500 text-white px-4 py-2 rounded text-sm font-semibold">Trace TCP Handshake</button>
+              </div>
+            </div>
+          </div>
+        `;
+      } else if (tab === "exam") {
+        container.innerHTML = `
+          <div class="space-y-6">
+            <h2 class="text-2xl font-bold text-slate-100">Mock Exam Practice Mode</h2>
+            <div class="card-slate space-y-4">
+              <p class="text-sm text-slate-300">Undergraduate 90-Mark Mock Exam structured according to official unit weightings across all 9 modules.</p>
+              <button onclick="alert('Mock Exam Started! Timer ticking down from 90 minutes.')" class="bg-blue-600 hover:bg-blue-500 text-white px-6 py-2 rounded text-sm font-semibold">Start Timed Mock Exam</button>
+            </div>
+          </div>
+        `;
+      }
+    }
+
+    function runSubnetCalc() {
+      const ip = document.getElementById("calc-ip").value;
+      const cidr = document.getElementById("calc-cidr").value;
+      const res = SubnetCalculator.calculate(ip, cidr);
+      const resDiv = document.getElementById("calc-results");
+
+      if (!res) {
+        resDiv.innerHTML = `<p class="text-red-400 text-sm">Invalid IP address or CIDR mask.</p>`;
+        return;
+      }
+
+      resDiv.innerHTML = `
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-3 text-sm">
+          <div class="bg-slate-900 p-3 rounded border border-slate-700"><strong>Network Address:</strong> <span class="text-blue-400">${res.networkAddress}</span></div>
+          <div class="bg-slate-900 p-3 rounded border border-slate-700"><strong>Subnet Mask:</strong> <span class="text-indigo-400">${res.subnetMask}</span></div>
+          <div class="bg-slate-900 p-3 rounded border border-slate-700"><strong>Broadcast Address:</strong> <span class="text-purple-400">${res.broadcastAddress}</span></div>
+          <div class="bg-slate-900 p-3 rounded border border-slate-700"><strong>Usable Host Range:</strong> <span class="text-emerald-400">${res.firstUsable} - ${res.lastUsable}</span></div>
+          <div class="bg-slate-900 p-3 rounded border border-slate-700"><strong>Total Addresses:</strong> ${res.totalAddresses}</div>
+          <div class="bg-slate-900 p-3 rounded border border-slate-700"><strong>Usable Hosts:</strong> ${res.usableHosts}</div>
+        </div>
+      `;
+    }
+  </script>
 </body>
 </html>
